@@ -32,8 +32,10 @@ RUN \
 		locales \
 		make \
 		pandoc \
+		pandoc-citeproc \
 		python3 \
 		texlive \
+		texlive-extra-utils \
 		texlive-fonts-extra \
 		texlive-latex-extra \
 		texlive-lang-german \
@@ -42,3 +44,6 @@ RUN \
 # document root
 VOLUME ["/docs"]
 WORKDIR /docs
+
+# interactive shell
+CMD ["bash", "--login", "--noprofile"]
