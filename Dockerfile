@@ -1,49 +1,47 @@
 # METADATA
-FROM ubuntu:latest
+FROM ubuntu:18.04
 LABEL maintainer="jmm@yavook.de"
 
-RUN \
-	# install locale configuration \
-	apt-get update && apt-get install -y \
-		locales \
-	&& rm -rf /var/lib/apt/lists/* &&\
-	\
-	# generate en_US.UTF-8 locale \
-	sed -ie 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen &&\
-	locale-gen
+# Set the env variables to non-interactive
+ENV  \
+		DEBIAN_FRONTEND=noninteractive \
+		DEBIAN_PRIORITY=critical \
+		DEBCONF_NOWARNINGS=yes
 
+# Install locale configuration
+RUN \
+		# begin install block
+		apt-get update && apt-get install -y \
+			locales \
+		# end install block
+&& 	rm -rf /var/lib/apt/lists/* \
+&&  locale-gen en_US.UTF-8
+
+# Set locale (character encoding issue)
 ENV \
-	# set locale (character encoding issue) \
-	LANG=en_US.UTF-8 \
-	LANGUAGE=en_US:en \
-	LC_ALL=en_US.UTF-8 \
-	\
-	# set timezone (install prompt) \
-	TZ=Etc/UTC
+		LANG=en_US.UTF-8
 
+# Install software
 RUN \
-	# actually set timezone \
-	ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime &&\
-	echo ${TZ} > /etc/timezone &&\
-	\
-	# install software \
-	apt-get update && apt-get install -y \
-		latexmk \
-		locales \
-		make \
-		pandoc \
-		pandoc-citeproc \
-		python3 \
-		texlive \
-		texlive-extra-utils \
-		texlive-fonts-extra \
-		texlive-latex-extra \
-		texlive-lang-german \
-	&& rm -rf /var/lib/apt/lists/*
+		# begin install block
+		apt-get update &&	apt-get install -y \
+			# builders
+			latexmk \
+			make \
+			# LaTeX
+			texlive \
+			texlive-extra-utils \
+			texlive-fonts-extra \
+			texlive-latex-extra \
+			texlive-lang-german \
+			# pandoc
+			pandoc \
+			pandoc-citeproc \
+			# miscellaneous
+			python3 \
+		# end install block
+&&	rm -rf /var/lib/apt/lists/*
 
 # document root
 VOLUME ["/docs"]
 WORKDIR /docs
-
-# interactive shell
-CMD ["bash", "--login", "--noprofile"]
