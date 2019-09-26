@@ -21,10 +21,22 @@ RUN \
 ENV \
 		LANG=en_US.UTF-8
 
+COPY \
+		pdftk-java_3.0.2-2_all.sha256 .
+
 # Install software
 RUN \
 		# begin install block
 		apt-get update &&	apt-get install -y \
+			# prereqs
+			wget \
+		# pdftk-java
+&&	wget http://archive.ubuntu.com/ubuntu/pool/universe/p/pdftk-java/pdftk-java_3.0.2-2_all.deb \
+&&	sha256sum -c pdftk-java_3.0.2-2_all.sha256 \
+&&	dpkg --unpack pdftk-java_3.0.2-2_all.deb \
+&& 	apt-get install -fy \
+&&  rm pdftk-java_3.0.2-2_all.deb \
+&&	apt-get install -y \
 			# builders
 			latexmk \
 			make \
