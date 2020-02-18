@@ -52,7 +52,7 @@ COPY \
     sha256sum.txt .
 
 ARG \
-    PDFTK_VERSION=3.0.6-1_all
+    PDFTK_VERSION=3.0.2-2_all
 
 # Install pdftk-java
 RUN \
