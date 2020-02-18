@@ -52,7 +52,7 @@ COPY \
     sha256sum.txt .
 
 ARG \
-    PDFTK_VERSION=3.0.2-2_all
+    PDFTK_VERSION=3.0.6-1_all
 
 # Install pdftk-java
 RUN \
@@ -67,8 +67,9 @@ RUN \
     wget http://archive.ubuntu.com/ubuntu/pool/universe/p/pdftk-java/pdftk-java_${PDFTK_VERSION}.deb; \
     sha256sum --ignore-missing -c sha256sum.txt; \
     dpkg --unpack pdftk-java_${PDFTK_VERSION}.deb; \
-    apt-get install -fy; \
-    rm pdftk-java_${PDFTK_VERSION}.deb;
+    rm pdftk-java_${PDFTK_VERSION}.deb sha256sum.txt; \
+    # install deps
+    apt-get update; apt-get install -fy; rm -rf /var/lib/apt/lists/*;
 
 # document root
 VOLUME ["/docs"]
